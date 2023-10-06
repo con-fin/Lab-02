@@ -49,8 +49,9 @@ plastic_data_all <- data2 %>%
   select(-name) %>%
   left_join(plastic_data_all, by = "code")
 # Member 3 write code to join your data to 'plastic_data_all':
-
-
+plastic_data_all <- data3 %>%
+  select(-name) %>%
+  right_join(plastic_data_all, by = "code")
 
 # Member 4 write code to join your data to 'plastic_data_all':
 plastic_data_all <- data4 %>%
