@@ -419,7 +419,10 @@ plastic_data_all %&gt;% head(n = 10)</code></pre>
 <h2>Exercises</h2>
 <div id="ex-1." class="section level3">
 <h3>Ex 1.</h3>
-<pre class="r"><code>plastic_data_all %&gt;% filter(mismanaged_plastic_ocean &gt; 0) %&gt;% group_by(region) %&gt;% count()</code></pre>
+<pre class="r"><code>plastic_data_all %&gt;% 
+  filter(mismanaged_plastic_ocean &gt; 0) %&gt;% 
+    group_by(region) %&gt;% 
+      count()</code></pre>
 <pre><code>## # A tibble: 6 × 2
 ## # Groups:   region [6]
 ##   region                              n
@@ -434,15 +437,76 @@ plastic_data_all %&gt;% head(n = 10)</code></pre>
 </div>
 <div id="ex-2." class="section level3">
 <h3>Ex 2.</h3>
-<pre class="r"><code># Write your code here to answer exercise 2</code></pre>
+<pre class="r"><code># Write your code here to answer exercise 2
+plastic_data_all %&gt;% 
+  mutate(&quot;total_mismanage_plastic&quot; = mismanaged_plastic * population) %&gt;%
+    group_by(region) %&gt;%
+      summarise( mean_tmp = mean(total_mismanage_plastic), 
+                sum_tmp = sum(total_mismanage_plastic)
+      )</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   region                          mean_tmp   sum_tmp
+##   &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Africa                           320729. 13791329.
+## 2 Asia                            1026059. 40016313.
+## 3 Europe                            38180.  1183580.
+## 4 Latin America and The Caribbean  193450.  6577315.
+## 5 North America                    147190.   294380.
+## 6 Oceania                           14577.   145766.</code></pre>
+<p>Asia has both the highest mean and sum total amount of mismanaged
+plastic, while Europe has the lowest mean and North America has the
+lowest sum.</p>
 </div>
 <div id="ex-3." class="section level3">
 <h3>Ex 3.</h3>
-<pre class="r"><code># Write your code here to answer exercise 3</code></pre>
+<pre class="r"><code># Write your code here to answer exercise 3
+plastic_data_all %&gt;% 
+  mutate(
+    &quot;pct_mismanaged_plastic_ocean&quot; = 
+      (mismanaged_plastic_ocean / mismanaged_plastic) * 100 
+  ) %&gt;%
+    group_by(region) %&gt;%
+      summarise(
+        med_pct_mpo = median(pct_mismanaged_plastic_ocean, na.rm = TRUE)
+      )</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   region                          med_pct_mpo
+##   &lt;chr&gt;                                 &lt;dbl&gt;
+## 1 Africa                                0.526
+## 2 Asia                                  0.974
+## 3 Europe                                0.846
+## 4 Latin America and The Caribbean       3.07 
+## 5 North America                         0.959
+## 6 Oceania                               1.58</code></pre>
+<p>The NA value for Africa is because some value for plastics in Africa
+was NA, producing an NA output when computed for the median. This NA
+value is a consequence of Somalia having both its amount of total
+plastic and ocean plastic be 0, meaning that, when one is divided by the
+other, an undefined value is produced.</p>
 </div>
 <div id="ex-4." class="section level3">
 <h3>Ex 4.</h3>
-<pre class="r"><code># Write your code here to answer exercise 4</code></pre>
+<pre class="r"><code># Write your code here to answer exercise 4
+plastic_data_all %&gt;% 
+  rename(
+    pop = population, 
+    plastic = mismanaged_plastic,
+    sea_plastic = mismanaged_plastic_ocean
+  )</code></pre>
+<pre><code>## # A tibble: 159 × 6
+##    code  region                               pop sea_plastic name       plastic
+##    &lt;chr&gt; &lt;chr&gt;                              &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1 AGO   Africa                           31808.      0.0270  Angola       7.45 
+##  2 ALB   Europe                            2876.      0.543   Albania     24.2  
+##  3 ARE   Asia                              9176.      0.00143 United Ar…   0.526
+##  4 ARG   Latin America and The Caribbean  44583.      0.0924  Argentina   10.4  
+##  5 ATG   Latin America and The Caribbean     91.9     0.0206  Antigua a…   6.46 
+##  6 AUS   Oceania                          25170.      0.00127 Australia    0.209
+##  7 BEL   Europe                           11480.      0.00295 Belgium      0.198
+##  8 BEN   Africa                           12114.      0.139   Benin       11.3  
+##  9 BFA   Africa                           20671.      0       Burkina F…  15.6  
+## 10 BGD   Asia                            164605.      0.151   Bangladesh   6.27 
+## # ℹ 149 more rows</code></pre>
 </div>
 </div>
 
